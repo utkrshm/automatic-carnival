@@ -1,0 +1,560 @@
+[
+  {
+    "name": "Mahatma Gandhi",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_politician": 1,
+      "is_freedom_fighter": 1,
+      "born_pre_independence": 1,
+      "is_vegetarian": 1,
+      "has_international_recognition": 1,
+      "face_on_currency": 1,
+      "is_lawyer": 1,
+      "lived_abroad": 1,
+      "has_national_holiday": 1,
+      "was_assassinated": 1,
+      "born_in_gujarat": 1,
+      "wore_traditional_attire": 1,
+      "practiced_nonviolence": 1
+    }
+  },
+  {
+    "name": "A.P.J. Abdul Kalam",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_scientist": 1,
+      "was_president": 1,
+      "born_post_independence": 1,
+      "is_author": 1,
+      "has_international_recognition": 1,
+      "is_vegetarian": 1,
+      "has_doctorate": 1,
+      "born_in_tamil_nadu": 1,
+      "worked_in_defense": 1,
+      "known_for_inspiring_youth": 1,
+      "has_autobiography": 1,
+      "received_bharat_ratna": 1
+    }
+  },
+  {
+    "name": "Amitabh Bachchan",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_actor": 1,
+      "is_tv_host": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "has_baritone_voice": 1,
+      "born_in_uttar_pradesh": 1,
+      "has_acted_in_over_100_films": 1,
+      "has_won_national_award": 1,
+      "has_famous_family": 1,
+      "is_over_70_years_old": 1,
+      "was_politician": 1,
+      "is_active_on_social_media": 1
+    }
+  },
+  {
+    "name": "Sachin Tendulkar",
+    "attributes": {
+      "is_male": 1, 
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "plays_cricket": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "has_autobiography": 1,
+      "has_records_in_field": 1,
+      "received_bharat_ratna": 1,
+      "was_in_parliament": 1,
+      "retired_from_main_career": 1,
+      "has_nicknames": 1,
+      "played_for_india_over_20_years": 1
+    }
+  },
+  {
+    "name": "Indira Gandhi",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 0,
+      "is_politician": 1,
+      "was_prime_minister": 1, 
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "was_assassinated": 1,
+      "has_famous_family": 1,
+      "born_in_uttar_pradesh": 1,
+      "imposed_emergency": 1,
+      "had_military_operation": 1,
+      "from_political_dynasty": 1,
+      "had_father_in_politics": 1
+    }
+  },
+  {
+    "name": "Virat Kohli",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "plays_cricket": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_delhi": 1,
+      "is_active_on_social_media": 1,
+      "married_to_celebrity": 1,
+      "has_business_ventures": 1,
+      "has_records_in_field": 1,
+      "has_tattoos": 1,
+      "has_brand_endorsements": 1,
+      "known_for_fitness": 1
+    }
+  },
+  {
+    "name": "Mother Teresa",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 0,
+      "is_religious_figure": 1,
+      "born_outside_india": 1,
+      "has_international_recognition": 1,
+      "has_nobel_prize": 1,
+      "is_catholic": 1,
+      "founded_organization": 1,
+      "worked_with_poor": 1,
+      "lived_in_west_bengal": 1,
+      "has_been_canonized": 1,
+      "wore_traditional_attire": 1,
+      "received_bharat_ratna": 1
+    }
+  },
+  {
+    "name": "Ratan Tata",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_businessman": 1,
+      "is_philanthropist": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "from_parsi_community": 1,
+      "studied_abroad": 1,
+      "leads_major_conglomerate": 1,
+      "received_padma_vibhushan": 1,
+      "never_married": 1,
+      "has_pilot_license": 1,
+      "born_in_maharashtra": 1,
+      "is_over_70_years_old": 1
+    }
+  },
+  {
+    "name": "Lata Mangeshkar",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 0,
+      "is_artist": 1,
+      "is_singer": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "has_records_in_field": 1,
+      "received_bharat_ratna": 1,
+      "has_siblings_in_same_profession": 1,
+      "sang_for_over_5_decades": 1,
+      "known_for_sweet_voice": 1,
+      "worked_in_bollywood": 1,
+      "has_national_honor_after_death": 1
+    }
+  },
+  {
+    "name": "Satyajit Ray",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_artist": 1,
+      "is_filmmaker": 1,
+      "is_author": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "has_oscar": 1,
+      "born_in_west_bengal": 1,
+      "created_fictional_characters": 1,
+      "worked_in_advertising": 1,
+      "known_for_realistic_cinema": 1,
+      "has_film_series": 1,
+      "was_illustrator": 1,
+      "received_bharat_ratna": 1
+    }
+  },
+  {
+    "name": "Srinivasa Ramanujan",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_scientist": 1,
+      "is_mathematician": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "died_young": 1,
+      "self_taught": 1,
+      "born_in_tamil_nadu": 1,
+      "studied_abroad": 1,
+      "has_mathematical_constant": 1,
+      "has_commemorative_year": 1,
+      "had_religious_visions": 1
+    }
+  },
+  {
+    "name": "Aamir Khan",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_actor": 1,
+      "is_filmmaker": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "from_film_family": 1,
+      "has_won_national_award": 1,
+      "has_social_impact_shows": 1,
+      "known_for_perfectionism": 1,
+      "has_charity_initiatives": 1,
+      "has_been_controversial": 1
+    }
+  },
+  {
+    "name": "Mary Kom",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "has_olympics_medal": 1,
+      "born_in_northeast": 1,
+      "has_biopic": 1,
+      "has_autobiography": 1,
+      "is_mother": 1,
+      "joined_politics": 1,
+      "has_nicknames": 1,
+      "received_padma_vibhushan": 1,
+      "has_boxing_academy": 1
+    }
+  },
+  {
+    "name": "Rabindranath Tagore",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_artist": 1,
+      "is_author": 1,
+      "is_poet": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "has_nobel_prize": 1,
+      "born_in_west_bengal": 1,
+      "wrote_national_anthem": 1,
+      "founded_university": 1,
+      "had_distinctive_beard": 1,
+      "created_new_art_form": 1,
+      "was_polymath": 1
+    }
+  },
+  {
+    "name": "M.S. Dhoni",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "plays_cricket": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_jharkhand": 1,
+      "has_biopic": 1,
+      "has_records_in_field": 1,
+      "had_government_job": 1,
+      "has_business_ventures": 1,
+      "has_unique_hairstyles": 1,
+      "captained_national_team": 1,
+      "retired_from_main_career": 1
+    }
+  },
+  {
+    "name": "Kalpana Chawla",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 0,
+      "is_scientist": 1,
+      "is_astronaut": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_haryana": 1,
+      "died_tragically": 1,
+      "studied_abroad": 1,
+      "lived_abroad": 1,
+      "was_engineer": 1,
+      "was_pilot": 1,
+      "space_traveler": 1
+    }
+  },
+  {
+    "name": "Sardar Vallabhbhai Patel",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_politician": 1,
+      "is_freedom_fighter": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 0,
+      "has_major_monument": 1,
+      "was_lawyer": 1,
+      "born_in_gujarat": 1,
+      "united_princely_states": 1,
+      "was_deputy_prime_minister": 1,
+      "known_for_strength": 1,
+      "has_special_nickname": 1
+    }
+  },
+  {
+    "name": "Arundhati Roy",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_author": 1,
+      "is_activist": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "has_major_literary_prize": 1,
+      "born_in_kerala": 1,
+      "has_been_controversial": 1,
+      "studied_architecture": 1,
+      "has_written_political_essays": 1,
+      "has_worked_in_films": 1,
+      "writes_in_english": 1
+    }
+  },
+  {
+    "name": "C.V. Raman",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_scientist": 1,
+      "is_physicist": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "has_nobel_prize": 1,
+      "born_in_tamil_nadu": 1,
+      "has_scientific_effect_named_after": 1,
+      "has_foundation_in_name": 1,
+      "has_commemorative_day": 1,
+      "worked_in_civil_service": 1,
+      "has_doctorate": 1
+    }
+  },
+  {
+    "name": "Deepika Padukone",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_actor": 1,
+      "is_model": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_denmark": 1,
+      "has_mental_health_foundation": 1,
+      "married_to_celebrity": 1,
+      "has_brand_endorsements": 1,
+      "has_business_ventures": 1,
+      "is_active_on_social_media": 1,
+      "played_sports_professionally": 1,
+      "from_south_india": 1
+    }
+  },
+  {
+    "name": "J.R.D. Tata",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_businessman": 1,
+      "is_philanthropist": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "from_parsi_community": 1,
+      "born_outside_india": 1,
+      "leads_major_conglomerate": 1,
+      "was_pilot": 1,
+      "founded_airline": 1,
+      "received_bharat_ratna": 1,
+      "born_in_foreign_country": 1
+    }
+  },
+  {
+    "name": "Asha Bhosle",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_artist": 1,
+      "is_singer": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "has_guinness_record": 1,
+      "has_siblings_in_same_profession": 1,
+      "has_restaurant_business": 1,
+      "received_padma_vibhushan": 1,
+      "worked_in_bollywood": 1,
+      "is_over_70_years_old": 1,
+      "has_performed_various_genres": 1
+    }
+  },
+  {
+    "name": "Narendra Modi",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_politician": 1,
+      "is_prime_minister": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_gujarat": 1,
+      "has_humble_beginnings": 1,
+      "was_chief_minister": 1,
+      "is_vegetarian": 1,
+      "practices_yoga": 1,
+      "is_active_on_social_media": 1,
+      "published_books": 1
+    }
+  },
+  {
+    "name": "Sania Mirza",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "plays_tennis": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "married_to_sportsperson": 1,
+      "married_foreigner": 1,
+      "has_autobiography": 1,
+      "received_padma_awards": 1,
+      "is_mother": 1,
+      "retired_from_main_career": 1,
+      "has_been_controversial": 1
+    }
+  },
+  {
+    "name": "Birsa Munda",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_freedom_fighter": 1,
+      "is_tribal_leader": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 0,
+      "died_young": 1,
+      "born_in_jharkhand": 1,
+      "led_revolt_against_british": 1,
+      "has_birth_anniversary_holiday": 1,
+      "has_religious_influence": 1,
+      "has_places_named_after": 1
+    }
+  },
+  {
+    "name": "Homi Bhabha",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_scientist": 1,
+      "is_physicist": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_maharashtra": 1,
+      "from_parsi_community": 1,
+      "died_tragically": 1,
+      "studied_abroad": 1,
+      "founded_research_institute": 1,
+      "developed_nuclear_program": 1,
+      "has_scientific_theory_named_after": 1,
+      "has_doctorate": 1
+    }
+  },
+  {
+    "name": "Shah Rukh Khan",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 1,
+      "is_actor": 1,
+      "is_businessman": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "born_in_delhi": 1,
+      "has_nickname_king": 1,
+      "owns_sports_teams": 1,
+      "started_in_television": 1,
+      "is_college_graduate": 1,
+      "married_to_hindu": 1,
+      "has_dimples": 1,
+      "has_acted_in_over_100_films": 1
+    }
+  },
+  {
+    "name": "Sarojini Naidu",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 0,
+      "is_politician": 1,
+      "is_poet": 1,
+      "is_freedom_fighter": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 1,
+      "was_governor": 1,
+      "born_in_telangana": 1,
+      "studied_abroad": 1,
+      "has_special_nickname": 1,
+      "has_commemorative_day": 1,
+      "was_first_female_governor": 1,
+      "writes_in_english": 1
+    }
+  },
+  {
+    "name": "Bhagat Singh",
+    "attributes": {
+      "is_male": 1,
+      "is_alive": 0,
+      "is_freedom_fighter": 1,
+      "is_revolutionary": 1,
+      "born_pre_independence": 1,
+      "has_international_recognition": 0,
+      "died_young": 1,
+      "was_executed": 1,
+      "born_in_punjab": 1,
+      "has_socialist_ideology": 1,
+      "wore_distinctive_hat": 1,
+      "has_birth_anniversary_holiday": 1,
+      "has_places_named_after": 1
+    }
+  },
+  {
+    "name": "P.V. Sindhu",
+    "attributes": {
+      "is_male": 0,
+      "is_alive": 1,
+      "is_sportsperson": 1,
+      "plays_badminton": 1,
+      "born_post_independence": 1,
+      "has_international_recognition": 1,
+      "has_olympics_medal": 1,
+      "born_in_telangana": 1,
+      "has_government_job": 1,
+      "received_padma_awards": 1,
+      "has_tall_height": 1,
+      "has_world_championship": 1,
+      "has_brand_endorsements": 1
+    }
+  }
+]

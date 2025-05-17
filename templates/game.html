@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akinator Game</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .container { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        .question { font-size: 1.2em; margin-bottom: 15px; }
+        .options label { margin-right: 15px; }
+        .submit-btn { padding: 10px 15px; margin-top: 15px; cursor: pointer; }
+        .message { margin-top: 20px; font-weight: bold; color: green; }
+        .error-message { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Akinator - Indian Personalities</h1>
+
+        {% if game_over %}
+            <div class="message {% if 'error' in message or 'Stumped' in message or 'contradiction' in message %}error-message{% endif %}">
+                {{ message }}
+            </div>
+            <p><a href="/">Play Again?</a></p>
+        {% else %}
+            <div class="question">{{ question_text }}</div>
+            <form action="/answer" method="post">
+                <input type="hidden" name="session_id" value="{{ session_id }}">
+                <input type="hidden" name="attribute_name" value="{{ attribute_name }}">
+                
+                <div class="options">
+                    <label>
+                        <input type="radio" name="answer" value="yes" required> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" value="no"> No
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Answer</button>
+            </form>
+        {% endif %}
+        
+        </div>
+</body>
+</html>
