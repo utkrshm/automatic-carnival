@@ -1,4 +1,3 @@
-# akinator_logic2.py
 import math
 import json
 import random
