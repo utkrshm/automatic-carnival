@@ -1,173 +1,95 @@
-from fastapi import FastAPI, Request, Form, Depends
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles # If you add CSS later
-import uuid # For session IDs
-import sqlite3
-import json
+from fastapi.templating import Jinja2Templates # For a slightly cleaner HTML serving
+from pydantic import BaseModel
+import uuid
+from typing import Dict, Any
 
 # Assuming akinator_logic.py is in the same directory
-from akinator_logic import AkinatorEfficientWeb 
-
-# --- Configuration ---
-DATASET_PATH = "indian_personalities_dataset_30.json" # Make sure this file exists
-DEFAULT_STRATEGY = "entropy_sampled" # Choose 'entropy_sampled' or 'simple_heuristic' for Railway
-DB_PATH = 'sessions.db'  # You can use ':memory:' for pure in-memory, but file is more robust for dev
+from akinator_logic import Akinator 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 
-# --- Initialize SQLite DB ---
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS sessions (
-            session_id TEXT PRIMARY KEY,
-            state_json TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# In-memory storage for game sessions. For production, use a more persistent store.
+game_sessions: Dict[str, Akinator] = {}
 
-init_db()
+# Paths to your data files
+DATASET_PATH = "indian_personalities_dataset_30.json"
+QUESTIONS_PATH = "questions_30.json"
 
-# --- Helper functions for session DB ---
-def save_game_session(session_id: str, game: AkinatorEfficientWeb):
-    # Serialize game state (probabilities, asked_attributes, questions_asked_count)
-    state = {
-        'probabilities': game.probabilities,
-        'asked_attributes': list(game.asked_attributes),
-        'questions_asked_count': game.questions_asked_count
-    }
-    state_json = json.dumps(state)
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('REPLACE INTO sessions (session_id, state_json) VALUES (?, ?)', (session_id, state_json))
-    conn.commit()
-    conn.close()
+# For serving HTML
+templates = Jinja2Templates(directory="templates") # Create a 'templates' directory
 
-def load_game_session(session_id: str, game: AkinatorEfficientWeb):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('SELECT state_json FROM sessions WHERE session_id = ?', (session_id,))
-    row = c.fetchone()
-    conn.close()
-    if row:
-        state = json.loads(row[0])
-        game.probabilities = {k: float(v) for k, v in state['probabilities'].items()}
-        game.asked_attributes = set(state['asked_attributes'])
-        game.questions_asked_count = int(state['questions_asked_count'])
-        return True
-    return False
+class AnswerPayload(BaseModel):
+    session_id: str
+    attribute_key: str
+    answer_value: float # 1.0 (yes), 0.0 (no), 0.75 (probably), 0.25 (probably not)
 
-def delete_game_session(session_id: str):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('DELETE FROM sessions WHERE session_id = ?', (session_id,))
-    conn.commit()
-    conn.close()
+class GuessConfirmationPayload(BaseModel):
+    session_id: str
+    guessed_character_name: str
+    user_confirms_correct: bool
 
-# --- Dependency to get or create game instance ---
-def get_game_session(session_id: str) -> AkinatorEfficientWeb:
-    game = AkinatorEfficientWeb(DATASET_PATH, question_selection_strategy=DEFAULT_STRATEGY)
-    loaded = load_game_session(session_id, game)
-    if not loaded:
-        game.reset_game_state()
-        save_game_session(session_id, game)
-    return game
 
-# --- FastAPI Endpoints ---
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    # Create a new session ID for a new game    
+async def get_index(request: Request):
+    # Simple HTML page content
+    # For a real app, serve this from a file using Jinja2Templates or StaticFiles
+    with open("templates/index.html", "r") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content)
+
+@app.post("/start_game")
+async def start_game_session():
     session_id = str(uuid.uuid4())
-    game = get_game_session(session_id) # This will create and reset it
+    try:
+        akinator_instance = Akinator(dataset_path=DATASET_PATH, questions_path=QUESTIONS_PATH)
+        game_sessions[session_id] = akinator_instance
+    except ValueError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to initialize Akinator: {str(e)}")
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="Dataset or questions file not found. Ensure 'indian_personalities_dataset_30.json' and 'questions_30.json' exist.")
+
+    initial_state = akinator_instance.start_game()
+    return {"session_id": session_id, **initial_state}
+
+@app.post("/answer")
+async def submit_answer(payload: AnswerPayload):
+    if payload.session_id not in game_sessions:
+        raise HTTPException(status_code=404, detail="Session not found.")
     
-    next_question = game.select_next_question()
-
-    if not next_question: # Should not happen on first load unless dataset is tiny/problematic
-        return templates.TemplateResponse("game.html", {
-            "request": request, 
-            "session_id": session_id,
-            "question": "I'm already stumped! Dataset issue?", 
-            "game_over": True, 
-            "message": "Could not start the game properly."
-        })
-
-    return templates.TemplateResponse("game.html", {
-        "request": request, 
-        "session_id": session_id, 
-        "question_text": f"Q{game.questions_asked_count + 1}: Is the person {next_question.replace('_', ' ')}?", # +1 because we haven't officially asked it yet
-        "attribute_name": next_question,
-        "game_over": False
-    })
-
-@app.post("/answer", response_class=HTMLResponse)
-async def handle_answer(request: Request, session_id: str = Form(...), attribute_name: str = Form(...), answer: str = Form(...)):
-    game = get_game_session(session_id)
-    if not game or not game.probabilities: # Game state not found or not initialized
-         return templates.TemplateResponse("game.html", {
-            "request": request, "session_id": "error", "question": "Session error. Please restart.", 
-            "game_over": True, "message": "Game session error."})
-
-
-    user_answer_binary = 1 if answer == "yes" else 0
+    akinator_instance = game_sessions[payload.session_id]
     
-    # Record answer - questions_asked_count is incremented inside record_answer_and_update
-    update_result = game.record_answer_and_update(attribute_name, user_answer_binary)
-    save_game_session(session_id, game)  # Save after update
+    if not (0.0 <= payload.answer_value <= 1.0):
+         raise HTTPException(status_code=400, detail="Invalid answer value. Must be 0, 0.25, 0.75, or 1.")
 
-    if update_result.get("status") == "contradiction":
-        delete_game_session(session_id)
-        return templates.TemplateResponse("game.html", {
-            "request": request, "session_id": session_id, 
-            "question": "", "game_over": True, "message": update_result["message"]
-        })
+    game_state = akinator_instance.process_answer(payload.attribute_key, payload.answer_value)
+    return {"session_id": payload.session_id, **game_state}
 
-    guess_info = game.get_guess_if_ready()
+@app.post("/confirm_guess")
+async def confirm_akinator_guess(payload: GuessConfirmationPayload):
+    if payload.session_id not in game_sessions:
+        raise HTTPException(status_code=404, detail="Session not found.")
+    
+    akinator_instance = game_sessions[payload.session_id]
 
-    if guess_info["type"] == "guess":
-        delete_game_session(session_id)
-        message = ""
-        if guess_info["name"]:
-            message = f"I am {guess_info['certainty']*100:.1f}% sure. My guess is: {guess_info['name']}!"
-            # Here you could add a form to confirm if the guess was correct
-            # For simplicity, we just display the guess.
-            # If you want to allow "was I right?", you'd need another endpoint or logic here.
-            # For now, if it's a guess, the game ends.
-        else:
-            message = guess_info.get("message", "I'm stumped!")
-        
-        return templates.TemplateResponse("game.html", {
-            "request": request, "session_id": session_id, 
-            "question": "", "game_over": True, "message": message
-        })
-    else: # Ask more
-        next_question = game.select_next_question()
-        if not next_question:
-            # This means no more distinguishing questions, but we weren't ready to guess
-            # (e.g. didn't meet min_questions or certainty threshold)
-            # Try a final Hail Mary guess based on current state
-            final_name, final_cert = game._get_current_guess_info() # Use internal method for raw info
-            message = "I've run out of good questions to ask."
-            if final_name and final_cert > 0.01:
-                message += f" My best feeling is it might be {final_name} ({final_cert*100:.1f}%)."
-            else:
-                message += " I'm truly stumped!"
-            delete_game_session(session_id)
-            return templates.TemplateResponse("game.html", {
-                "request": request, "session_id": session_id,
-                "question": "", "game_over": True, "message": message
-            })
+    if payload.user_confirms_correct:
+        # Game won
+        response_data = {
+            "session_id": payload.session_id,
+            "status": "finished",
+            "message": f"Great! I knew it was {payload.guessed_character_name}!",
+            "guess": payload.guessed_character_name,
+            "certainty": 1.0, # Or actual certainty if available and relevant
+            "top_candidates": akinator_instance._get_top_candidates(5)
+        }
+        # Clean up session
+        del game_sessions[payload.session_id] 
+        return response_data
+    else:
+        # Akinator was wrong, ask it to process mistaken guess
+        game_state = akinator_instance.process_mistaken_guess(payload.guessed_character_name)
+        return {"session_id": payload.session_id, **game_state}
 
-        save_game_session(session_id, game)
-        return templates.TemplateResponse("game.html", {
-            "request": request, 
-            "session_id": session_id, 
-            "question_text": f"Q{game.questions_asked_count + 1}: Is the person {next_question.replace('_', ' ')}?",
-            "attribute_name": next_question,
-            "game_over": False
-        })
-
-# --- To run this FastAPI app: uvicorn main:app --reload ---
+# To run: uvicorn main:app --reload
+# Ensure you have 'templates/index.html'    

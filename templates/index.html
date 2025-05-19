@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akinator Game</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        .question-area, .results-area, .guess-confirmation-area { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .hidden { display: none; }
+        button {
+            background-color: #007bff; color: white; padding: 10px 15px; border: none;
+            border-radius: 4px; cursor: pointer; font-size: 16px; margin-top:10px;
+        }
+        button:hover { background-color: #0056b3; }
+        .radio-group label { margin-right: 15px; }
+        .candidates-list { list-style-type: none; padding: 0; }
+        .candidates-list li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Akinator Game</h1>
+
+        <button id="startGameBtn">Start New Game</button>
+
+        <div id="gameArea" class="hidden">
+            <div id="questionArea" class="question-area">
+                <h2 id="questionText"></h2>
+                <input type="hidden" id="attributeKey" value="">
+                <div class="radio-group">
+                    <label><input type="radio" name="answer" value="1.0"> Yes</label>
+                    <label><input type="radio" name="answer" value="0.0"> No</label>
+                    <label><input type="radio" name="answer" value="0.75"> Probably</label>
+                    <label><input type="radio" name="answer" value="0.25"> Probably Not</label>
+                </div>
+                <button id="submitAnswerBtn">Submit Answer</button>
+            </div>
+
+            <div id="guessConfirmationArea" class="guess-confirmation-area hidden">
+                <h2 id="guessPrompt"></h2>
+                <input type="hidden" id="guessedCharacterName" value="">
+                <button id="confirmYesBtn">Yes, that's it!</button>
+                <button id="confirmNoBtn">No, that's not it.</button>
+            </div>
+            
+            <div id="resultsArea" class="results-area hidden">
+                <h2 id="resultText"></h2>
+                <p>Final Guess: <strong id="finalGuessName"></strong></p>
+                <p>Certainty: <strong id="finalCertainty"></strong></p>
+            </div>
+
+            <div id="topCandidatesArea" class="question-area" style="margin-top: 10px;">
+                <h3>Top Candidates:</h3>
+                <ul id="candidatesList" class="candidates-list"></ul>
+            </div>
+             <p>Questions Asked: <span id="questionsAskedCount">0</span></p>
+        </div>
+         <div id="errorArea" style="color:red; margin-top:15px;"></div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+
+        const startGameBtn = document.getElementById('startGameBtn');
+        const gameArea = document.getElementById('gameArea');
+        const questionArea = document.getElementById('questionArea');
+        const questionTextEl = document.getElementById('questionText');
+        const attributeKeyEl = document.getElementById('attributeKey');
+        const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+        
+        const guessConfirmationArea = document.getElementById('guessConfirmationArea');
+        const guessPromptEl = document.getElementById('guessPrompt');
+        const guessedCharacterNameEl = document.getElementById('guessedCharacterName');
+        const confirmYesBtn = document.getElementById('confirmYesBtn');
+        const confirmNoBtn = document.getElementById('confirmNoBtn');
+
+        const resultsArea = document.getElementById('resultsArea');
+        const resultTextEl = document.getElementById('resultText');
+        const finalGuessNameEl = document.getElementById('finalGuessName');
+        const finalCertaintyEl = document.getElementById('finalCertainty');
+        
+        const candidatesListEl = document.getElementById('candidatesList');
+        const questionsAskedCountEl = document.getElementById('questionsAskedCount');
+        const errorAreaEl = document.getElementById('errorArea');
+
+        startGameBtn.addEventListener('click', async () => {
+            try {
+                errorAreaEl.textContent = '';
+                const response = await fetch('/start_game', { method: 'POST' });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                currentSessionId = data.session_id;
+                updateGameState(data);
+                
+                startGameBtn.classList.add('hidden');
+                gameArea.classList.remove('hidden');
+                questionArea.classList.remove('hidden');
+                resultsArea.classList.add('hidden');
+                guessConfirmationArea.classList.add('hidden');
+
+            } catch (error) {
+                console.error('Error starting game:', error);
+                errorAreaEl.textContent = 'Error starting game: ' + error.message;
+            }
+        });
+
+        submitAnswerBtn.addEventListener('click', async () => {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (!selectedAnswer) {
+                errorAreaEl.textContent = 'Please select an answer.';
+                return;
+            }
+            errorAreaEl.textContent = '';
+
+            const payload = {
+                session_id: currentSessionId,
+                attribute_key: attributeKeyEl.value,
+                answer_value: parseFloat(selectedAnswer.value)
+            };
+
+            try {
+                const response = await fetch('/answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                updateGameState(data);
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                errorAreaEl.textContent = 'Error submitting answer: ' + error.message;
+            }
+        });
+
+        confirmYesBtn.addEventListener('click', async () => {
+            handleGuessConfirmation(true);
+        });
+        confirmNoBtn.addEventListener('click', async () => {
+            handleGuessConfirmation(false);
+        });
+
+        async function handleGuessConfirmation(isCorrect) {
+            errorAreaEl.textContent = '';
+            const payload = {
+                session_id: currentSessionId,
+                guessed_character_name: guessedCharacterNameEl.value,
+                user_confirms_correct: isCorrect
+            };
+            try {
+                const response = await fetch('/confirm_guess', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                 if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                updateGameState(data);
+            } catch (error) {
+                console.error('Error confirming guess:', error);
+                errorAreaEl.textContent = 'Error confirming guess: ' + error.message;
+            }
+        }
+
+
+        function updateGameState(data) {
+            console.log("Received game state:", data);
+            questionsAskedCountEl.textContent = data.questions_asked !== undefined ? data.questions_asked : (data.game_state ? data.game_state.questions_asked : questionsAskedCountEl.textContent);
+            
+            updateTopCandidates(data.top_candidates);
+
+            if (data.status === 'playing') {
+                questionTextEl.textContent = data.question_text;
+                attributeKeyEl.value = data.attribute_key;
+                
+                questionArea.classList.remove('hidden');
+                resultsArea.classList.add('hidden');
+                guessConfirmationArea.classList.add('hidden');
+                // Clear radio button selection
+                document.querySelectorAll('input[name="answer"]').forEach(radio => radio.checked = false);
+            } else if (data.status === 'make_guess') {
+                guessPromptEl.textContent = `${data.message} Are you thinking of ${data.guess}?`;
+                guessedCharacterNameEl.value = data.guess;
+
+                questionArea.classList.add('hidden');
+                resultsArea.classList.add('hidden');
+                guessConfirmationArea.classList.remove('hidden');
+            } else if (data.status === 'finished') {
+                resultTextEl.textContent = data.message;
+                finalGuessNameEl.textContent = data.guess || "None";
+                finalCertaintyEl.textContent = data.certainty !== null && data.certainty !== undefined ? (data.certainty * 100).toFixed(1) + '%' : "N/A";
+                
+                questionArea.classList.add('hidden');
+                guessConfirmationArea.classList.add('hidden');
+                resultsArea.classList.remove('hidden');
+                startGameBtn.classList.remove('hidden'); // Allow starting a new game
+            }
+        }
+
+        function updateTopCandidates(candidates) {
+            candidatesListEl.innerHTML = ''; // Clear previous list
+            if (candidates && candidates.length > 0) {
+                candidates.forEach(candidate => {
+                    const name = candidate[0];
+                    const prob = candidate[1];
+                    if (prob > 0.001) { // Only show if some minimal probability
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${name}: ${(prob * 100).toFixed(1)}%`;
+                        candidatesListEl.appendChild(listItem);
+                    }
+                });
+            } else {
+                candidatesListEl.innerHTML = '<li>No candidates to show yet.</li>';
+            }
+        }
+    </script>
+</body>
+</html>
